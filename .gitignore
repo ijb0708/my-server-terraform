@@ -1,0 +1,68 @@
+# ========================
+# Terraform 관련
+# ========================
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*.tfplan
+*.backup
+
+# tfenv 버전 매니저 설정
+.terraform-version
+
+# Terraform 출력 파일
+plan.out
+
+# ========================
+# macOS 관련
+# ========================
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS 썸네일 캐시
+._*
+
+# macOS Spotlight
+.Spotlight-V100
+
+# macOS Trash
+.Trashes
+
+# ========================
+# Zsh 관련 (개인 설정 제외)
+# ========================
+.zsh_history
+.zshrc.pre-oh-my-zsh
+.zcompdump*
+.zsh_sessions
+
+# ========================
+# 에디터/툴 관련
+# ========================
+*.swp
+*.swo
+*.swn
+*.bak
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# Python 가상환경 (예: terraform-lint 등)
+venv/
+__pycache__/
+*.pyc
+
+# ========================
+# 기타 민감 정보 수동 무시 (예시)
+# ========================
+terraform.tfvars
+*.auto.tfvars
+*.secrets.tfvars
+*.private.tfvars
+secrets.tfvars
