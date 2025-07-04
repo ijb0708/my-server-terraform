@@ -37,12 +37,14 @@ resource "proxmox_virtual_environment_vm" "router" {
     bridge      = "vmbr0"
     model       = "virtio"
     mac_address = "BC:24:11:09:34:95"
+    firewall  = false
   }
 
   network_device {
     bridge      = "vmbr1"
     model       = "virtio"
     mac_address = "BC:24:11:C0:09:3F"
+    firewall  = false
   }
 
 }
@@ -84,6 +86,7 @@ resource "proxmox_virtual_environment_vm" "dhcp" {
   network_device {
     bridge = "vmbr1"
     model  = "virtio"
+    firewall  = false
   }
 }
 
@@ -124,6 +127,7 @@ resource "proxmox_virtual_environment_vm" "dns" {
   network_device {
     bridge = "vmbr1"
     model  = "virtio"
+    firewall  = false
   }
 }
 
@@ -164,5 +168,88 @@ resource "proxmox_virtual_environment_vm" "ns" {
   network_device {
     bridge = "vmbr1"
     model  = "virtio"
+    firewall  = false
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "codex" {
+
+  description = "Imported data of infra VM"
+
+  name      = "codex"
+  node_name = "galateia"
+  vm_id     = 10101
+
+  on_boot       = true
+  scsi_hardware = "virtio-scsi-single"
+  tags          = []
+
+  cpu {
+    cores      = 1
+    sockets    = 2
+    flags      = []
+    hotplugged = 0
+    limit      = 0
+    numa       = false
+    type       = "host"
+    units      = 1024
+  }
+
+  memory {
+    dedicated      = 4096
+    floating       = 0
+    keep_hugepages = false
+    shared         = 0
+  }
+
+  operating_system {
+    type = "l26"
+  }
+
+  network_device {
+    bridge = "vmbr1"
+    model  = "virtio"
+    firewall  = false
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "daemon" {
+
+  description = "Imported daemon of infra VM"
+
+  name      = "daemon"
+  node_name = "galateia"
+  vm_id     = 10131
+
+  on_boot       = true
+  scsi_hardware = "virtio-scsi-single"
+  tags          = []
+
+  cpu {
+    cores      = 1
+    sockets    = 2
+    flags      = []
+    hotplugged = 0
+    limit      = 0
+    numa       = false
+    type       = "host"
+    units      = 1024
+  }
+
+  memory {
+    dedicated      = 4096
+    floating       = 0
+    keep_hugepages = false
+    shared         = 0
+  }
+
+  operating_system {
+    type = "l26"
+  }
+
+  network_device {
+    bridge = "vmbr1"
+    model  = "virtio"
+    firewall  = false
   }
 }
