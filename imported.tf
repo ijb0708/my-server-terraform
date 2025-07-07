@@ -73,7 +73,7 @@ resource "proxmox_virtual_environment_vm" "dhcp" {
   }
 
   memory {
-    dedicated      = 1023
+    dedicated      = 1024
     floating       = 0
     keep_hugepages = false
     shared         = 0
@@ -170,6 +170,7 @@ resource "proxmox_virtual_environment_vm" "ns" {
     model  = "virtio"
     firewall  = false
   }
+
 }
 
 resource "proxmox_virtual_environment_vm" "codex" {
@@ -211,6 +212,8 @@ resource "proxmox_virtual_environment_vm" "codex" {
     model  = "virtio"
     firewall  = false
   }
+
+  started = false
 }
 
 resource "proxmox_virtual_environment_vm" "daemon" {
@@ -252,4 +255,6 @@ resource "proxmox_virtual_environment_vm" "daemon" {
     model  = "virtio"
     firewall  = false
   }
+
+  started = false
 }
