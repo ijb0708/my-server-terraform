@@ -11,8 +11,8 @@ resource "proxmox_virtual_environment_vm" "router" {
   tags          = []
 
   cpu {
-    cores   = 1
-    sockets = 2
+    cores   = 2
+    sockets = 1
     type    = "host"
   }
 
@@ -144,8 +144,8 @@ resource "proxmox_virtual_environment_vm" "ns" {
   tags          = []
 
   cpu {
-    cores      = 1
-    sockets    = 2
+    cores      = 2
+    sockets    = 1
     flags      = []
     hotplugged = 0
     limit      = 0
@@ -186,8 +186,8 @@ resource "proxmox_virtual_environment_vm" "codex" {
   tags          = []
 
   cpu {
-    cores      = 1
-    sockets    = 2
+    cores      = 2
+    sockets    = 1
     flags      = []
     hotplugged = 0
     limit      = 0
@@ -229,8 +229,8 @@ resource "proxmox_virtual_environment_vm" "daemon" {
   tags          = []
 
   cpu {
-    cores      = 1
-    sockets    = 2
+    cores      = 2
+    sockets    = 1
     flags      = []
     hotplugged = 0
     limit      = 0
