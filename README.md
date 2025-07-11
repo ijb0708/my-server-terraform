@@ -57,5 +57,3 @@ For example:
 - **Terraform**: 1.12.2  
 - **Terraform Provider**: `bpg/proxmox` v0.78.0  
 - **Ansible**: 2.18.6
-
----
