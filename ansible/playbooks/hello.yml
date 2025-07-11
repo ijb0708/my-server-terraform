@@ -1,0 +1,24 @@
+- name: Test Ansible playbook for K3s worker
+  hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Create a hello.txt file
+      copy:
+        dest: /home/servermanager/hello.txt
+        content: |
+          Hello from Ansible!
+          This file was created during automated test.
+
+    - name: Ensure correct permissions on hello.txt
+      file:
+        path: /home/servermanager/hello.txt
+        owner: servermanager
+        group: servermanager
+        mode: "0644"

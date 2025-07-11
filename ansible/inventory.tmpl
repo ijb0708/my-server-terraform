@@ -1,0 +1,3 @@
+%{ for name, data in vms_data ~}
+${name} ansible_host=${data.vm_ip} ansible_user=${data.vm_username} ansible_ssh_pass=${data.vm_password}
+%{ endfor ~}

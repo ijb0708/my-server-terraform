@@ -1,0 +1,50 @@
+---
+- name: Setup minimal K3s Master Node (Debian-based, swap already off)
+  hosts: master
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required dependencies
+      apt:
+        name:
+          - curl
+          - ca-certificates
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Install K3s (default configuration)
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode=644" sh -
+      args:
+        creates: /etc/systemd/system/k3s.service
+
+    - name: Wait for K3s to become active
+      shell: |
+        systemctl is-active k3s
+      register: k3s_status
+      retries: 10
+      delay: 5
+      until: k3s_status.stdout == "active"
+
+    - name: Create kube config directory
+      file:
+        path: /home/{{ ansible_user }}/.kube
+        state: directory
+        mode: "0755"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Copy kube config to user directory
+      copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: /home/{{ ansible_user }}/.kube/config
+        remote_src: yes
+        force: no
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0644"

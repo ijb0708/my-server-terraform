@@ -1,0 +1,29 @@
+- name: Join K3s Worker Node
+  hosts: worker
+  become: true
+
+  vars:
+    k3s_url: "https://master.kubernet.internal:6443" # 마스터 주소
+    k3s_token: "K10717b3b2a2c1d8b1a0c3..." # 마스터에서 확인한 토큰
+
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - curl
+          - ca-certificates
+        state: present
+        update_cache: true
+
+    - name: Join K3s cluster as worker
+      shell: |
+        curl -sfL https://get.k3s.io | K3S_URL={{ k3s_url }} K3S_TOKEN={{ k3s_token }} sh -
+      args:
+        creates: /etc/systemd/system/k3s-agent.service
+
+    - name: Wait for k3s-agent to be active
+      shell: systemctl is-active k3s-agent
+      register: agent_status
+      retries: 10
+      delay: 5
+      until: agent_status.stdout == "active"

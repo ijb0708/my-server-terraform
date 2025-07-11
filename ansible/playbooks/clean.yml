@@ -1,0 +1,17 @@
+- name: clean, Health check for all K3s VMs
+  hosts: all
+  gather_facts: no
+  any_errors_fatal: true
+  # serial: 1
+
+  tasks:
+    - name: Ensure known_hosts does not break provisioning
+      delegate_to: localhost
+      become: false
+      shell: ssh-keygen -R {{ hostvars[inventory_hostname].ansible_host }}
+
+    - name: Wait for cloud-init to finish
+      command: cloud-init status --wait
+      register: cloudinit_done
+      changed_when: false
+      failed_when: cloudinit_done.rc != 0

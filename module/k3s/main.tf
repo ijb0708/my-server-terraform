@@ -1,22 +1,6 @@
-terraform {
-    required_providers {
-        proxmox = {
-            source  = "bpg/proxmox"
-            version = "= 0.78.0"
-        }
-    }
-}
-
-locals {
-  vm_id         = tonumber(format("12%03d", var.vm_number))
-  vm_name       = format("worker%03d", var.vm_number)
-  vm_domain     = format("worker%03d.kubernet.internal", var.vm_number)
-  vm_address    = format("10.1.2.%d/24", var.vm_number)
-}
-
 resource "proxmox_virtual_environment_vm" "this" {
 
-    vm_id         = local.vm_id
+    vm_id         = var.vm_id
     name          = local.vm_name
     node_name     = "galateia"
 
@@ -34,6 +18,12 @@ resource "proxmox_virtual_environment_vm" "this" {
     memory {
         dedicated   = var.memory
         floating    = var.memory # set equal to dedicated to enable ballooning
+    }
+
+    disk {
+        datastore_id    = "vm-data"
+        interface       = "scsi0"
+        size            = var.disk_size
     }
 
     network_device {
@@ -55,13 +45,13 @@ resource "proxmox_virtual_environment_vm" "this" {
 
         dns {
             domain = local.vm_domain
-            servers = ["10.1.0.5"]
+            servers = ["10.1.0.3"]
         }
 
         ip_config {
             ipv4 {
                 address = local.vm_address
-                gateway = "10.2.0.1"
+                gateway = "10.1.2.1"
             }
         }
     }

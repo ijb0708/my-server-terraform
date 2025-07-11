@@ -59,10 +59,16 @@ __pycache__/
 *.pyc
 
 # ========================
-# 기타 민감 정보 수동 무시 (예시)
+# ansible
 # ========================
-terraform.tfvars
-*.auto.tfvars
+inventory.ini
+secrets.yml
+*.retry
+*.log
+
+# ========================
+# 기타 민감 정보 수동 무시 
+# ========================
 *.secrets.tfvars
 *.private.tfvars
 secrets.tfvars
