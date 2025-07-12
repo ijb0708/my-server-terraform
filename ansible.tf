@@ -1,27 +1,21 @@
 locals {
   roles = ["master", "worker"]
+
   role_map = {
-    master = {
-      for k, v in module.k3s_vms : k => v if v.role == "master"
-    }
-    worker = {
-      for k, v in module.k3s_vms : k => v if v.role == "worker"
+    for role in local.roles : role => {
+      for k, v in module.k3s_vms : k => v if v.role == role
     }
   }
 }
 
-resource "local_file" "inventory_master" {
-  content  = templatefile("${path.module}/ansible/inventory.tmpl", {
-    vms_data = local.role_map["master"]
-  })
-  filename = "${path.module}/ansible/inventory/master.ini"
-}
+resource "local_file" "inventory" {
 
-resource "local_file" "inventory_worker" {
-  content  = templatefile("${path.module}/ansible/inventory.tmpl", {
-    vms_data = local.role_map["worker"]
+  content = templatefile("${path.module}/ansible/inventory.tmpl", {
+    roles     = local.roles
+    role_map  = local.role_map
   })
-  filename = "${path.module}/ansible/inventory/worker.ini"
+
+  filename ="${path.module}/ansible/inventory.ini"
 }
 
 # ansible-playbook -i inventory.ini playbooks/health-check.yml -f 1

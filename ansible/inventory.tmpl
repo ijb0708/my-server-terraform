@@ -1,3 +1,7 @@
-%{ for name, data in vms_data ~}
+%{ for role in roles ~}
+[${role}]
+%{ for name, data in role_map[role] ~}
 ${name} ansible_host=${data.vm_ip} ansible_user=${data.vm_username} ansible_ssh_pass=${data.vm_password}
+%{ endfor ~}
+
 %{ endfor ~}

@@ -1,0 +1,36 @@
+- name: Disable SSH password authentication
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Test SSH connection with password
+      ping:
+      register: ssh_ping_result
+      ignore_errors: false # 실패 시 전체 플레이북 중단
+
+    - name: Ensure PasswordAuthentication is set to no
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication\s+'
+        line: "PasswordAuthentication no"
+        state: present
+        backup: yes
+
+    - name: Ensure ChallengeResponseAuthentication is set to no
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?ChallengeResponseAuthentication\s+'
+        line: "ChallengeResponseAuthentication no"
+        state: present
+
+    - name: Ensure UsePAM is set to no
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?UsePAM\s+'
+        line: "UsePAM no"
+        state: present
+
+    - name: Restart SSH service
+      service:
+        name: ssh
+        state: restarted

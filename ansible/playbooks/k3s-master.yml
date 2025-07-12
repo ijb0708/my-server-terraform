@@ -4,6 +4,11 @@
   become: true
 
   tasks:
+    - name: Test SSH connection with password
+      ping:
+      register: ssh_ping_result
+      ignore_errors: false # 실패 시 전체 플레이북 중단
+
     - name: Update apt cache
       apt:
         update_cache: yes

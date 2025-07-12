@@ -10,6 +10,11 @@
       become: false
       shell: ssh-keygen -R {{ hostvars[inventory_hostname].ansible_host }}
 
+    - name: Test SSH connection with password
+      ping:
+      register: ssh_ping_result
+      ignore_errors: false # 실패 시 전체 플레이북 중단
+
     - name: Wait for cloud-init to finish
       command: cloud-init status --wait
       register: cloudinit_done

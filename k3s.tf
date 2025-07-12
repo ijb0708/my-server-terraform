@@ -19,8 +19,8 @@ module "k3s_vms" {
     vm_id   = each.value.vm_id
     role    =  each.value.role
 
-    cores       = each.value.cores
-    disk_size   = each.value.disk_size
     sockets     = each.value.sockets
+    cores       = each.value.cores
     memory      = each.value.memory
+    disk_size   = each.value.disk_size
 }

@@ -72,3 +72,4 @@ secrets.yml
 *.secrets.tfvars
 *.private.tfvars
 secrets.tfvars
+.secrets

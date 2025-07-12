@@ -25,7 +25,7 @@ output "vm_private_key" {
 
 output "vm_public_key" {
   value = tls_private_key.vm_key.public_key_openssh
-  sensitive = false
+  sensitive = true
 }
 
 output "vm_id" {

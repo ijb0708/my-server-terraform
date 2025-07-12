@@ -4,49 +4,22 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")/ansible"
 
-# echo $SCRIPT_DIR
-# echo $PROJECT_ROOT
-
 cd "$PROJECT_ROOT"
 
+ansible-playbook playbooks/check.yml -f 1 -v
 
-# Playbook 선택
-echo ""
-echo "✅ Health check passed!"
-echo "Choose which playbook to run:"
-echo "1) k3s-master"
-echo "2) k3s-worker"
-echo "*) exit"
-read -p "Enter your choice [1,2]: " choice
+read -p "do you want to continue? (Y/n): " answer
 
-case $choice in
-  1)
-    ROLE="master"
-    ;;
-  2)
-    ROLE="worker"
-    ;;
-  *)
-    echo "❌ Invalid choice. Exiting."
-    exit 1
-    ;;
-esac
-
-# Health check
-echo "Running health-check..."
-ansible-playbook -i "inventory/${ROLE}.ini" playbooks/clean.yml -f 1
-if [ $? -ne 0 ]; then
-  echo "❌ Health check failed. Exiting."
-  exit 1
-fi
-
-echo "Do you want run ${ROLE} playbook(Y/n)?"
-read -r answer
-if [[ "$answer" != "y" && "$answer" != "Y" ]]; then
-  echo -e "cancelled"
+if [[ "$answer" != "Y" && "$answer" != "y" ]]; then
+  echo "canceled."
   exit 0
 fi
 
-echo "▶ Running k3s-${ROLE} playbook..."
-ansible-playbook -i "inventory/${ROLE}.ini" playbooks/k3s-master.yml -f 1
-;;
+# 실행할 명령어
+echo "loading..."
+
+ansible-playbook playbooks/k3s-worker.yml -f 1
+ansible-playbook playbooks/k3s-master.yml -f 1 
+ansible-playbook playbooks/close-ssh.yml -f 1 
+
+echo It's done
