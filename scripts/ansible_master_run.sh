@@ -18,8 +18,6 @@ fi
 # 실행할 명령어
 echo "loading..."
 
-ansible-playbook playbooks/k3s-worker.yml -f 1
 ansible-playbook playbooks/k3s-master.yml -f 1 
-ansible-playbook playbooks/close-ssh.yml -f 1 
 
-echo It's done
+echo "It's done"

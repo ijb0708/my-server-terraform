@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "this" {
 
-    vm_id         = var.vm_id
+    vm_id         = local.vm_id
     name          = local.vm_name
     node_name     = "galateia"
 
@@ -33,9 +33,16 @@ resource "proxmox_virtual_environment_vm" "this" {
         firewall    = false
     }
 
+    agent {
+        enabled = true
+        timeout = "15m"
+        trim    = false
+        type    = "virtio"
+    }
+
     initialization {
 
-        datastore_id         = "vm-data"
+        datastore_id = "vm-data"
 
         user_account {
             username = "servermanager"
@@ -49,33 +56,22 @@ resource "proxmox_virtual_environment_vm" "this" {
         }
 
         ip_config {
-            ipv4 {
-                address = local.vm_address
-                gateway = "10.1.2.1"
+            dynamic "ipv4" {
+                for_each = local.vm_dhcp_enabled ? [1] : []
+                content {
+                    address = "dhcp"
+                }
             }
+
+            dynamic "ipv4" {
+                for_each = local.vm_dhcp_enabled ? [] : [1]
+                content {
+                    address = local.vm_static_address
+                    gateway = "10.1.2.1"
+                }
+            }
+            
         }
+
     }
-}
-
-resource "random_password" "vm_password" {
-  length           = 16
-  override_special = "_%@"
-  special          = true
-}
-
-resource "tls_private_key" "vm_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "local_file" "private_key_file" {
-  content          = tls_private_key.vm_key.private_key_pem
-  filename         = "${path.module}/../../.secrets/id_rsa_vm${var.vm_id}"
-  file_permission  = "0600"
-}
-
-resource "local_file" "public_key_file" {
-  content          = tls_private_key.vm_key.public_key_openssh
-  filename         = "${path.module}/../../.secrets/id_rsa_vm${var.vm_id}.pub"
-  file_permission  = "0644"
 }

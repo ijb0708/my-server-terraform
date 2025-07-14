@@ -1,5 +1,11 @@
-variable "vm_id" {
-    type = number
+variable "primary_key" {
+    type        = string
+    description = "important key for VMs, vm00000"
+    
+    validation {
+        condition     = can(regex("^vm[0-9]{5}$", var.primary_key))
+        error_message = "vm_name must be in the format 'vm' followed by exactly 5 digits (e.g., vm00001)."
+    }
 }
 
 variable "vm_name" {
@@ -24,7 +30,7 @@ variable "disk_size" {
 
     default = 8
     validation {
-        condition     = var.disk_size >= 8
+        condition     = var.disk_size >= 4
         error_message = "vm_count 값은 반드시 8보다 커야 합니다."
     }
 }

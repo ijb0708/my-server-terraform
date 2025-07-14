@@ -34,6 +34,7 @@
       register: k3s_status
       retries: 10
       delay: 5
+      failed_when: k3s_status.stdout != "active"
       until: k3s_status.stdout == "active"
 
     - name: Create kube config directory

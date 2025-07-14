@@ -1,3 +1,8 @@
+output "primary_key" {
+    value = var.primary_key
+    sensitive = false
+}
+
 output "vm_username" {
   value     = "servermanager"
   sensitive = false
@@ -14,7 +19,13 @@ output "role" {
 }
 
 output "vm_ip" {
-  value     =  local.vm_ip
+  # value     =  local.vm_ip
+  value     = proxmox_virtual_environment_vm.this.ipv4_addresses[1][0]
+  sensitive = false
+}
+
+output "vm_name" {
+  value     = proxmox_virtual_environment_vm.this.name
   sensitive = false
 }
 
